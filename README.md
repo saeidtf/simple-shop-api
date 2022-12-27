@@ -36,7 +36,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 ### How to
 
-Here's an example to get a list of fake users:
+Here's an example to get a list of fake products:
 
 ```ts
 fetch("http://localhost:3000/products")
