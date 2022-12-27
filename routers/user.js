@@ -75,6 +75,15 @@ router.post("/login", async (req, res) => {
 router.post("/register", async (req, res) => {
   try {
     const user = req.body;
+    const findUser = await User.findOne({
+      where: {
+        email: user.email,
+      },
+    });
+    if (findUser) {
+      errorRequest(res, "email is duplicate", 400);
+      return;
+    }
     const response = await User.create(user);
     if (response) {
       const token = createToken(response);
