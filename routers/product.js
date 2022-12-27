@@ -1,13 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const { Product, OrderItem, sequelize } = require("../models");
+const { Product, OrderItem, sequelize , Sequelize } = require("../models");
 const { successRequest, errorRequest } = require("../utilities/util");
+
+router.post("/insertBulk", async (req, res) => {
+  const products = require("../mocks/products.json").map((x) => ({
+    ...x,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }));
+
+  await Product.destroy({ truncate: true, cascade: true });
+  await Product.bulkCreate(products);
+  return successRequest(res, "Insert success");
+});
 
 router.get("/", async (req, res) => {
   const { page = 1, pageSize = 25 } = req.query;
   const products = await Product.findAndCountAll({
     limit: pageSize,
     offset: (page - 1) * pageSize,
+    attributes: {
+      exclude: ["createdAt", "updatedAt"],
+    },
+  });
+  return successRequest(res, products);
+});
+
+router.get("/search", async (req, res) => {
+  const { page = 1, pageSize = 25, keyword = "" } = req.query;
+  const products = await Product.findAndCountAll({
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+    where: {
+      name: {
+        [Sequelize.Op.like]: `%${keyword}%`,
+      },
+    },
     attributes: {
       exclude: ["createdAt", "updatedAt"],
     },
