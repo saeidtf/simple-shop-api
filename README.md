@@ -155,3 +155,32 @@ Here's an example to get order by id with token in header:
       .then(response => response.json())
       .then(json => console.log(json)); // returns an order items
 ```
+
+Here's an example to add new order with token in header:
+
+```ts
+    const order = {
+        orderItems : [
+            {
+                productId : 1,
+                quantity : 1
+            },
+            {
+                productId : 2,
+                quantity : 2
+            }
+        ],
+        address : 'tehran',
+        date : '2022-27-12',
+    }
+
+    fetch("http://localhost:3000/orders",{
+        body:JSON.stringify(order),
+        method:'POST',
+        headers: {
+            'Authorization': 'Bearer ' + token
+        }
+    })
+      .then(response => response.json())
+      .then(json => console.log(json)); 
+```
