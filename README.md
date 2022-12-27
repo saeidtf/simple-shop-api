@@ -34,3 +34,12 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 - /orders // POST - add new order
 
 
+### How to
+
+Here's an example to get a list of fake users:
+
+```ts
+fetch("http://localhost:3000/products")
+  .then(response => response.json())
+  .then(json => console.log(json)); // returns an array of products
+```
