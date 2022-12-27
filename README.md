@@ -12,14 +12,14 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
-### Api Routes
+## Api Routes
 
-users api :
+### users api 
 
 /users/register
 /users/login
 
-products api :
+### products api 
 
 /products/insertBulk // POST
 /products/[?page=1&pageSize=25&q=search]
@@ -27,7 +27,7 @@ products api :
 /products/bestSeller/[?limit=10]
 /products/newest/[?limit=10]
 
-orders api :
+### orders api 
 
 /orders/[?page=1&pageSize=25]
 /orders/:id
