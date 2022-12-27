@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Product, OrderItem, sequelize , Sequelize } = require("../models");
+const { Product, OrderItem, sequelize, Sequelize } = require("../models");
 const { successRequest, errorRequest } = require("../utilities/util");
 
 router.post("/insertBulk", async (req, res) => {
@@ -16,27 +16,19 @@ router.post("/insertBulk", async (req, res) => {
 });
 
 router.get("/", async (req, res) => {
-  const { page = 1, pageSize = 25 } = req.query;
-  const products = await Product.findAndCountAll({
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
-    attributes: {
-      exclude: ["createdAt", "updatedAt"],
-    },
-  });
-  return successRequest(res, products);
-});
-
-router.get("/search", async (req, res) => {
-  const { page = 1, pageSize = 25, keyword = "" } = req.query;
-  const products = await Product.findAndCountAll({
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
-    where: {
+  const { page = 1, pageSize = 25, q } = req.query;
+  let where = {};
+  if (q) {
+    where = {
       name: {
-        [Sequelize.Op.like]: `%${keyword}%`,
+        [Sequelize.Op.like]: `%${q}%`,
       },
-    },
+    };
+  }
+  const products = await Product.findAndCountAll({
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+    where,
     attributes: {
       exclude: ["createdAt", "updatedAt"],
     },
@@ -55,7 +47,7 @@ router.get("/bestSeller", async (req, res) => {
     order: [[sequelize.fn("COUNT", sequelize.col("productId")), "DESC"]],
     limit,
   });
-  const productIds = countOrders.map((x) => x.productId);
+  const productIds = countOrders.map((product) => product.productId);
   const products = await Product.findAll({
     where: {
       id: productIds,

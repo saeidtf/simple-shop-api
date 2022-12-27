@@ -50,29 +50,29 @@ router.post("/", checkToken, async (req, res) => {
   if (!orderItems || orderItems.length === 0)
     return errorRequest(res, "No order items", 400);
 
-  const productIds = orderItems.map((x) => x.productId);
+  const productIds = orderItems.map((item) => item.productId);
   const products = await Product.findAll({
     where: {
       id: productIds,
     },
   });
 
-  const orderItemsToCreate = orderItems.map((x) => {
-    const product = products.find((p) => p.id === x.productId);
+  const orderItemsToCreate = orderItems.map((item) => {
+    const product = products.find((p) => p.id === item.productId);
     if (!product) {
       return {
         delete: true,
       };
     }
     return {
-      productId: x.productId,
-      quantity: x.quantity,
+      productId: item.productId,
+      quantity: item.quantity,
       price: product.price,
-      total: x.quantity * product.price,
+      total: item.quantity * product.price,
     };
   });
 
-  const orderItemsNotDeleted = orderItemsToCreate.filter((x) => !x.delete);
+  const orderItemsNotDeleted = orderItemsToCreate.filter((item) => !item.delete);
 
   const order = await Order.create({
     userId: req.userId,
@@ -85,9 +85,9 @@ router.post("/", checkToken, async (req, res) => {
   });
 
   const orderItemsCreated = await OrderItem.bulkCreate(
-    orderItemsNotDeleted.map((x) => {
+    orderItemsNotDeleted.map((item) => {
       return {
-        ...x,
+        ...item,
         orderId: order.id,
       };
     })
