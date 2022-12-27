@@ -8,13 +8,19 @@ router.get("/", async (req, res) => {
     const products = await Product.findAndCountAll({
         limit: pageSize,
         offset: (page - 1) * pageSize,
-        exclude: ["createdAt", "updatedAt"],
+        attributes: {
+            exclude: ["createdAt", "updatedAt"]
+        },
     });
     return successRequest(res, products);
 });
 
 router.get("/:id", async (req, res) => {
-    const product = await Product.findByPk(req.params.id);
+    const product = await Product.findByPk(req.params.id,{
+        attributes: {
+            exclude: ["createdAt", "updatedAt"]
+        },
+    });
     if(!product) return errorRequest(res, "Product not found", 404);
 
     return successRequest(res, product);
