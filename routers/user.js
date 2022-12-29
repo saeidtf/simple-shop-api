@@ -3,6 +3,7 @@ const router = express.Router();
 const { User } = require("../models");
 const { successRequest, errorRequest } = require("../utilities/util");
 const jwt = require("jsonwebtoken");
+const { checkToken } = require("../middlewares/auth");
 
 const authenticateUserWithemail = (user) => {
   return new Promise((resolve, reject) => {
@@ -106,5 +107,39 @@ router.post("/register", async (req, res) => {
     errorRequest(res, "user register failed", 400);
   }
 });
+
+router.get("/profile", checkToken, async (req, res) => {
+  const user = await User.findByPk(req.userId);
+  if (!user) return errorRequest(res, "User not found", 404);
+  return successRequest(res, {
+    id: user.id,
+    name: user.name,
+    family: user.family,
+    email: user.email,
+    phone: user.phone,
+  });
+});
+
+router.put("/profile", checkToken, async (req, res) => {
+  const user = await User.findByPk(req.userId);
+  if (!user) return errorRequest(res, "User not found", 404);
+  const { name, family, phone , password } = req.body;
+  if (name) user.name = name;
+  if (family) user.family = family;
+  if (phone) user.phone = phone;
+  if (password) user.password = password;
+  await user.save();
+  return successRequest(res, {
+    id: user.id,
+    name: user.name,
+    family: user.family,
+    email: user.email,
+    phone: user.phone,
+  });
+});
+
+
+
+
 
 module.exports = router;

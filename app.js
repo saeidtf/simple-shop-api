@@ -5,7 +5,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT ||  3000;
+const port = process.env.PORT ||  3500;
 
 scheduledFunctions.initScheduledJobs();
 
@@ -20,7 +20,7 @@ app.use(cors());
 
 
 app.get("/", async (req, res) => {
-  res.send('Hello World!');
+  res.send('Shop API');
 });
 
 
