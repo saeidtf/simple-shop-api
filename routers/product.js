@@ -48,13 +48,13 @@ router.get("/bestSeller", async (req, res) => {
     limit,
   });
   let productIds = countOrders.map((product) => product.productId);
-  if (!productIds.length) {
-    productIds =await Product.findAll({
+  if (!productIds.length || productIds.length < limit) {
+    const newProductIds =await Product.findAll({
       attributes: ["id"],
-      limit,
+      limit : limit - productIds.length,
       raw:true
     })
-    productIds = productIds.map(x=>x.id)
+    productIds.push(...newProductIds.map(x=>x.id))
   }
 
   const products = await Product.findAll({
