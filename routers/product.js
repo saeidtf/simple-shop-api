@@ -47,7 +47,16 @@ router.get("/bestSeller", async (req, res) => {
     order: [[sequelize.fn("COUNT", sequelize.col("productId")), "DESC"]],
     limit,
   });
-  const productIds = countOrders.map((product) => product.productId);
+  let productIds = countOrders.map((product) => product.productId);
+  if (!productIds.length) {
+    productIds =await Product.findAll({
+      attributes: ["id"],
+      limit,
+      raw:true
+    })
+    productIds = productIds.map(x=>x.id)
+  }
+
   const products = await Product.findAll({
     where: {
       id: productIds,
