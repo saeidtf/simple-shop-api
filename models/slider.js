@@ -7,5 +7,6 @@ module.exports = (sequelize, type) => {
         },        
         title: type.STRING(250),        
         image: type.STRING(250),
+        smallImage: type.STRING(250),
     })
 }
