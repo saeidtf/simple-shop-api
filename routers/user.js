@@ -58,11 +58,11 @@ router.post("/login", async (req, res) => {
       const token = createToken(response);
       successRequest(res, { token }, "user login successfully", 200);
     } else {
-      errorRequest(res, "user login failed 1", 400);
+      errorRequest(res, "user login failed 1", 200);
     }
   } catch (error) {
     console.log(error, "error");
-    errorRequest(res, "user login failed 2", 400);
+    errorRequest(res, "user login failed 2", 200);
   }
 });
 
@@ -75,7 +75,7 @@ router.post("/register", async (req, res) => {
       },
     });
     if (findUser) {
-      errorRequest(res, "email is duplicate", 400);
+      errorRequest(res, "email is duplicate", 200);
       return;
     }
     const response = await User.create(user);
@@ -94,10 +94,10 @@ router.post("/register", async (req, res) => {
 
       successRequest(res, data, "user register successfully", 200);
     } else {
-      errorRequest(res, "user register failed", 400);
+      errorRequest(res, "user register failed", 200);
     }
   } catch (error) {    
-    errorRequest(res, "user register failed", 400);
+    errorRequest(res, "user register failed", 200);
   }
 });
 
