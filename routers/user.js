@@ -30,7 +30,7 @@ const authenticateUserWithemail = (user) => {
           }
         }
       });
-    } catch (error) {      
+    } catch (error) {
       resolve(false);
     }
   });
@@ -56,7 +56,21 @@ router.post("/login", async (req, res) => {
     const response = await authenticateUserWithemail(user);
     if (response) {
       const token = createToken(response);
-      successRequest(res, { token }, "user login successfully", 200);
+      successRequest(
+        res,
+        {
+          token,
+          user: {
+            id: response.id,
+            name: response.name,
+            family: response.family,
+            email: response.email,
+            phone: response.phone,
+          },
+        },
+        "user login successfully",
+        200
+      );
     } else {
       errorRequest(res, "user login failed 1", 200);
     }
@@ -96,7 +110,7 @@ router.post("/register", async (req, res) => {
     } else {
       errorRequest(res, "user register failed", 200);
     }
-  } catch (error) {    
+  } catch (error) {
     errorRequest(res, "user register failed", 200);
   }
 });
@@ -116,7 +130,7 @@ router.get("/profile", checkToken, async (req, res) => {
 router.put("/profile", checkToken, async (req, res) => {
   const user = await User.findByPk(req.userId);
   if (!user) return errorRequest(res, "User not found", 404);
-  const { name, family, phone , password } = req.body;
+  const { name, family, phone, password } = req.body;
   if (name) user.name = name;
   if (family) user.family = family;
   if (phone) user.phone = phone;
@@ -130,9 +144,5 @@ router.put("/profile", checkToken, async (req, res) => {
     phone: user.phone,
   });
 });
-
-
-
-
 
 module.exports = router;
