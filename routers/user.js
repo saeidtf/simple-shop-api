@@ -30,15 +30,8 @@ const authenticateUserWithemail = (user) => {
           }
         }
       });
-    } catch (error) {
-      const response = {
-        status: 500,
-        data: {},
-        error: {
-          message: "user match failed",
-        },
-      };
-      reject(response);
+    } catch (error) {      
+      resolve(false);
     }
   });
 };
