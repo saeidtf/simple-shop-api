@@ -14,8 +14,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(helmet())
-app.use(cors());
 
+const corsOptions = {
+  origin: function (origin, callback) {
+    callback(null, true);
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 
 
