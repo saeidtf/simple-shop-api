@@ -20,7 +20,7 @@ app.use(cors());
 
 
 app.get("/", async (req, res) => {
-  res.send('Shop API');
+  res.send('Shop API for Ecommerce');
 });
 
 
