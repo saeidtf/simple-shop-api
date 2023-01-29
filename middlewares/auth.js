@@ -3,13 +3,15 @@ const { User } = require("../models");
 const { errorRequest } = require("../utilities/util");
 
 const checkToken = (req, res, next) => {
-  const token = req.headers["authorization"];
+  let token = req.headers["authorization"];
   if (!token) {
     return errorRequest(res, "No token provided", 403);
   }
+  token = token.replace("Bearer ", "");
+  
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return errorRequest(res, "Failed to authenticate token", 500);
+      return errorRequest(res, "Failed to authenticate token", 200);
     }
     const user = User.findOne({
       where: {
