@@ -24,28 +24,25 @@ router.get("/:id", checkToken, async (req, res) => {
     where: {
       id: req.params.id,
       userId: req.userId,
-    },
-    attributes:{
-      exclude: ["status" , "userId" , "updatedAt" , "date" , "address"],
-    },
-    include: [
-      {
-        model: OrderItem,
-        as: "orderItems",
-        attributes: ["id", "quantity", "price", "total"],
-        include: [
-          {
-            model: Product,
-            as: "product",
-            attributes: ["id", "name", "image", "price"],
-          },
-        ],
-      },
-    ],
+    },    
   });
   if (!order) return errorRequest(res, "Order not found", 404);
 
-  return successRequest(res, order);
+  const orderItems = await OrderItem.findAll({
+    where: {
+      orderId: order.id,
+    },
+    attributes:["id", "productId", "quantity", "price", "total"],
+    include: [
+      {
+        model: Product,
+        attributes: ["id", "name", "image"],
+      },
+    ],
+  });
+
+
+  return successRequest(res, orderItems);
 });
 
 router.post("/", checkToken, async (req, res) => {
