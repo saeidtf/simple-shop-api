@@ -25,20 +25,19 @@ router.get("/:id", checkToken, async (req, res) => {
       id: req.params.id,
       userId: req.userId,
     },
+    attributes:{
+      exclude: ["status" , "userId" , "updatedAt" , "date" , "address"],
+    },
     include: [
       {
         model: OrderItem,
         as: "orderItems",
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
+        attributes: ["id", "quantity", "price", "total"],
         include: [
           {
             model: Product,
             as: "product",
-            attributes: {
-              exclude: ["createdAt", "updatedAt"],
-            },
+            attributes: ["id", "name", "image", "price"],
           },
         ],
       },
