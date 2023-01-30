@@ -9,16 +9,17 @@ const checkToken = (req, res, next) => {
   }
   token = token.replace("Bearer ", "");
   
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET,async (err, decoded) => {
     if (err) {
       return errorRequest(res, "Failed to authenticate token", 200);
     }
-    const user = User.findOne({
+    const user = await User.findOne({
       where: {
         id: decoded.id,
         email: decoded.email,
       },
-    });
+    });    
+
     if (!user) {
       return errorRequest(res, "No token provided", 403);
     }
