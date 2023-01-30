@@ -5,7 +5,7 @@ const { errorRequest } = require("../utilities/util");
 const checkToken = (req, res, next) => {
   let token = req.headers["authorization"];
   if (!token) {
-    return errorRequest(res, "No token provided", 403);
+    return errorRequest(res, "No token provided", 200);
   }
   token = token.replace("Bearer ", "");
   
@@ -21,7 +21,7 @@ const checkToken = (req, res, next) => {
     });    
 
     if (!user) {
-      return errorRequest(res, "No token provided", 403);
+      return errorRequest(res, "No token provided", 200);
     }
     req.userId = decoded.id;    
     next();
