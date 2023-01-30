@@ -20,7 +20,11 @@ router.get("/", checkToken, async (req, res) => {
 });
 
 router.get("/:id", checkToken, async (req, res) => {
-  const order = await Order.findByPk(req.params.id, {
+  const order = await Order.findOne({
+    where: {
+      id: req.params.id,
+      userId: req.userId,
+    },
     include: [
       {
         model: OrderItem,
